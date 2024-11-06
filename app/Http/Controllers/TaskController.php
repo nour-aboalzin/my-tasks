@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\TaskStatusEnum;
 use App\Http\Requests\StoreTaskRequest;
+use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Task;
 use Illuminate\Http\Request;
 
@@ -13,7 +15,8 @@ class TaskController extends Controller
      */
     public function index()
     {
-        //
+        $tasks = Task::paginate(20);
+        return view('dashboard', compact('tasks'));
     }
 
     /**
@@ -29,8 +32,8 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest $request)
     {
-        dd($request->validated());
         Task::create($request->validated());
+        return back()->with('success', 'task created');
     }
 
     /**
@@ -46,15 +49,17 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        //
+        $statuses = TaskStatusEnum::cases();
+        return view('tasks.edit', compact('task', 'statuses'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Task $task)
+    public function update(UpdateTaskRequest $request, Task $task)
     {
-        //
+        $task->update($request->validated());
+        return back()->with('success', 'task updated');
     }
 
     /**

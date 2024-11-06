@@ -8,9 +8,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard',[TaskController::class,'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -19,6 +17,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('task/create',[TaskController::class,'create'])->name('task.create');
     Route::post('task',[TaskController::class,'store'])->name('task.store');
+    Route::get('{task}',[TaskController::class,'edit'])->name('task.edit');
+    Route::put('{task}',[TaskController::class,'update'])->name('task.update');
 });
 
 require __DIR__.'/auth.php';

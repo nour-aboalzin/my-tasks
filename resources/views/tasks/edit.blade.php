@@ -15,24 +15,38 @@
                         </div>
                         @endif
                     </div>
-                    <form action="{{ route('task.store') }}" method="POST">
+                    <form action="{{ route('task.update', $task) }}" method="POST">
                         @csrf
-                        <input value="{{ old('title') }}" type="text" placeholder="Title" name="title" class="input input-bordered w-full max-w-xs"/>
+                        @method('PUT')
+                        <input value="{{ old('title', $task->title) }}" type="text" placeholder="Title" name="title" class="input input-bordered w-full max-w-xs"/>
                     @error('title')
                         <p class="text-red-600">{{ $message }}</p>
                     @enderror
                 <div class="w-full my-3">
-                    <input value="{{ old('due_date') }}" type="date" placeholder="Due Date" name="due_date" class="input input-bordered w-full max-w-xs"/>
+                    <input value="{{ old('due_date', $task->due_date) }}" type="date" placeholder="Due Date" name="due_date" class="input input-bordered w-full max-w-xs"/>
                     @error('due_date')
                         <p class="text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
-                    <textarea class="textarea textarea-bordered w-full max-w-xs" placeholder="Description" name="description">{{ old('description') }}</textarea>
+
+                <div class="w-full my-3">
+                    <select class="select select-bordered w-full max-w-xs" name="status">
+                        <option disabled selected>Status</option>
+                        @foreach ($statuses as $status)
+                        <option @selected($status->value == $task->status) value="{{ $status->value }}">{{ $status->value }}</option>
+                        @endforeach
+                      </select>
+                    @error('status')
+                        <p class="text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                    <textarea class="textarea textarea-bordered w-full max-w-xs" placeholder="Description" name="description">{{ old('description', $task->description) }}</textarea>
                     @error('description')
                         <p class="text-red-600">{{ $message }}</p>
                     @enderror
                 <div class="w-full my-2">
-                        <button class="btn btn-success text-white">Create</button>
+                        <button class="btn btn-success text-white">Save</button>
                 </div>
                     </form>
                 </div>
